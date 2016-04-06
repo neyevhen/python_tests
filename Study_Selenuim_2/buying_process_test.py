@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 import unittest
 
-import time
+
 from selenium.webdriver import ActionChains
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class buying_process_test(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
+            self.driver = webdriver.Firefox()
 
     def css_selector(self, loc):
         dr = self.driver
-        return dr.find_element_by_css_selector(loc)
+        return WebDriverWait(dr, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, loc)))
 
     def test_search_in_python_org(self):
         driver = self.driver
@@ -28,7 +31,6 @@ class buying_process_test(unittest.TestCase):
         for key in enter_text:
             loc(key).send_keys(enter_text[key])
         loc(".button.short").click()
-        time.sleep(2)
         el = loc("#city")
         el.clear()
         el.send_keys(u"Запорожье")
@@ -38,7 +40,7 @@ class buying_process_test(unittest.TestCase):
                           "#store_list .custom-select__value-wrap",
                           ".custom-select__item[data-value='9707']"]
         for input in dropdown_input:
-            time.sleep(2)
+            driver.implicitly_wait(10)
             loc(input).click()
         # ...... SUBMIT.........
         assert u"Відділення №5" in driver.page_source
